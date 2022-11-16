@@ -5,9 +5,9 @@
     "baseUrl": ".",
     "types": ["node"],
     "paths": {
-      "indy-vdr-shared": ["shared/src"],
-      "indy-vdr-react-native": ["react-native/src"],
-      "indy-vdr-nodejs": ["nodejs/src"]
+      "indy-vdr-test-shared": ["shared/src"],
+      "indy-vdr-test-react-native": ["react-native/src"],
+      "indy-vdr-test-nodejs": ["nodejs/src"]
     }
   },
   "include": [".eslintrc.js"],

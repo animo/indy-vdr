@@ -1,8 +1,8 @@
-import type { IndyVdrPool } from 'indy-vdr-nodejs'
+import type { IndyVdrPool } from 'indy-vdr-test-nodejs'
 
 import { setupPool } from './utils'
 
-import { GetTransactionRequest } from 'indy-vdr-nodejs'
+import { GetTransactionRequest } from 'indy-vdr-test-nodejs'
 
 describe('GetTransactionRequest', () => {
   let pool: IndyVdrPool
