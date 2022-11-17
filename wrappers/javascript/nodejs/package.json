@@ -19,7 +19,8 @@
     "build",
     "README.md",
     "LICENSE",
-    "package.json"
+    "package.json",
+    "scripts/pre-gyp.sh"
   ],
   "scripts": {
     "check-types": "tsc --noEmit -p tsconfig.build.json",
@@ -31,7 +32,7 @@
     "compile": "tsc -p tsconfig.build.json",
     "example": "yarn --cwd example",
     "test": "jest",
-    "install": "node-pre-gyp install"
+    "install": "./scripts/pre-gyp.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -60,6 +61,6 @@
     "module_path": "native",
     "remote_path": "v0.3.4",
     "host": "https://github.com/hyperledger/indy-vdr/releases/download/",
-    "package_name": "library-{platform}.tar.gz"
+    "package_name": "library-{platform}-{arch}.tar.gz"
   }
 }

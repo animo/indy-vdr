@@ -94,10 +94,19 @@ jobs:
     strategy:
       matrix:
         include:
+          # x86
           - os: ubuntu-latest
             lib: libindy_vdr.so
             container: andrewwhitehead/manylinux2014-base
             platform: linux
+            arch: x64
+          # arm
+          - os: ubuntu-latest
+            lib: libindy_vdr.so
+            container: andrewwhitehead/manylinux2014-base
+            platform: linux
+            target: aarch64-unknown-linux-gnu
+            arch: arm64
 
     container: ${{ matrix.container }}
     runs-on: ${{ matrix.os }}
@@ -114,6 +123,10 @@ jobs:
 
       - name: Cache cargo resources
         uses: Swatinem/rust-cache@v1
+
+      - if: ${{ matrix.target }}
+        name: Install custom target
+        run: rustup target add ${{ matrix.target }}
 
       - name: Build library
         env:
@@ -143,7 +156,7 @@ jobs:
           command: c
           cwd: release-artifacts
           files: .
-          outPath: "library-${{ matrix.platform }}.tar.gz"
+          outPath: "library-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz"
 
       - name: Add library artifacts to release
         if: |
@@ -151,8 +164,8 @@ jobs:
           (github.event_name == 'workflow_dispatch' && github.event.inputs.publish-binaries == 'true')
         uses: svenstaro/upload-release-action@v2
         with:
-          file: library-${{ matrix.platform }}.tar.gz
-          asset_name: "library-${{ matrix.platform }}.tar.gz"
+          file: library-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
+          asset_name: "library-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz"
 
   build-release:
     name: Build Library (MacOS/Win)
@@ -166,10 +179,12 @@ jobs:
             target: apple-darwin
             toolchain: beta #  beta required for aarch64-apple-darwin target
             platform: darwin
+            arch: universal
           - os: windows-latest
             lib: indy_vdr.dll
             toolchain: stable
             platform: windows
+            arch: x64
 
     runs-on: ${{ matrix.os }}
 
@@ -215,7 +230,7 @@ jobs:
           command: c
           cwd: release-artifacts
           files: .
-          outPath: "library-${{ matrix.platform }}.tar.gz"
+          outPath: "library-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz"
 
       - name: Add library artifacts to release
         if: |
@@ -223,8 +238,8 @@ jobs:
           (github.event_name == 'workflow_dispatch' && github.event.inputs.publish-binaries == 'true')
         uses: svenstaro/upload-release-action@v2
         with:
-          file: library-${{ matrix.platform }}.tar.gz
-          asset_name: "library-${{ matrix.platform }}.tar.gz"
+          file: library-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
+          asset_name: "library-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz"
 
   build-golang:
     name: Build and Test Go wrapper
